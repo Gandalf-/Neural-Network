@@ -4,16 +4,16 @@
 `Network.java` implements a supervised back propogration deep neural network.
 Full example usage can be found in `MNIST.java` and `Sandbox.java`. The Apache
 Math Commons 3.6.1 jar is required and can be found 
-[here](http://commons.apache.org/proper/commons-math/index.html)
+[here](http://commons.apache.org/proper/commons-math/download_math.cgi) from the Apache Math Commons website or you get just the jar [here](https://public.anardil.net/Projects/Neural-Network/commons-math3-3.6.1.jar) from anardil.net.
 
-## Quick Start
-  1. git clone https://github.com/Gandalf-/Neural-Network.git
-  2. cd Neural-Network
+## Quick Start for Linux
+  1. `git clone https://github.com/Gandalf-/Neural-Network.git`
+  2. `cd Neural-Network`
   3. Grab the Apache Math Commons 3.6.1 Library
-     [jar](http://commons.apache.org/proper/commons-math/download_math.cgi) and
+     [jar](https://public.anardil.net/Projects/Neural-Network/commons-math3-3.6.1.jar) and
      unzip it. Move commons-math3.6.1.jar into Neural-Network
-  4. make
-  5. java -cp .:commons-math3.6.1.jar Sandbox
+  4. `make`
+  5. `java -cp .:commons-math3.6.1.jar Sandbox`
   6. Done!
 
 ## Features
@@ -52,5 +52,6 @@ Math Commons 3.6.1 jar is required and can be found
 
 
 ## Example output
+- Model that predicts if a number is positive or negative, from `Sandbox.java`.
 ![Alt text](sandbox_example.png)
 
