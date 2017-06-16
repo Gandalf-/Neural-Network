@@ -22,8 +22,8 @@ http://commons.apache.org/proper/commons-math/index.html
   int description[] = { 28 * 28, 15, 10 };
   NeuralNetwork network = new NeuralNetwork(description);
 
-  network.train(training_data, 15, 250, learn_speed);
-  network.print_verbose();
+  network.train(
+    training_data, tolerance, max_epochs, learn_speed);
   
   System.out.print("Last iteration: ");
   network.get_accuracy(test_data);
