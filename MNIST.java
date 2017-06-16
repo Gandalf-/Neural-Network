@@ -43,10 +43,9 @@ public class MNIST {
     System.out.println("Learning speed: " + learn_speed);
     NeuralNetwork network = new NeuralNetwork(description);
 
-    //network.print_verbose();
     network.train(training_data, 15, 250, learn_speed);
+    network.print_csv("models/mnist.csv");
 
-    //network.print_verbose();
     System.out.print("Last iteration: ");
     network.get_accuracy(test_data);
   }

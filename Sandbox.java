@@ -43,7 +43,7 @@ public class Sandbox {
     /* build the network */
     int[] description = {3, 3, 2, 2};
     //NeuralNetwork network = new NeuralNetwork(description);
-    NeuralNetwork network = new NeuralNetwork("data/sandbox.csv");
+    NeuralNetwork network = new NeuralNetwork("models/sandbox.csv");
 
     /* train */
     int tolerance  = 15;
@@ -54,7 +54,7 @@ public class Sandbox {
     /* final output */
     System.out.print("Last iteration: ");
     network.get_accuracy(training_data);
-    network.print_csv("data/sandbox.csv");
+    network.print_csv("models/sandbox.csv");
 
     /* interactive interface with resulting model */
     System.out.println("Starting interactive mode");

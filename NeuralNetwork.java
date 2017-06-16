@@ -74,8 +74,10 @@ public class NeuralNetwork {
   }
 
   /**
+   * reconstructs a saved neural network from a CSV file, the format used is
+   * given in NeuralNetwork.print_csv()
    *
-   * @param filename name of input CSV network description file
+   * @param filename name of input CSV network model file
    */
   public NeuralNetwork(String filename) {
 

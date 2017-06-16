@@ -29,5 +29,18 @@ http://commons.apache.org/proper/commons-math/index.html
   network.get_accuracy(test_data);
 ```
 
+- Models can be saved to and loaded from CSV files, allowing you to keep
+  training later or save models for comparision later. Trained models are
+  provided in the `/models` folder.
+```
+  NeuralNetwork network = new NeuralNetwork("models/sandbox.csv");
+  network.train(training_data, tolerance, max_epochs, speed);
+
+  network.get_accuracy(training_data);
+  network.print_csv("models/sandbox.csv");
+```
+
+
+## Example output
 ![Alt text](sandbox_example.png)
 
