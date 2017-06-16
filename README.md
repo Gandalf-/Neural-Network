@@ -3,13 +3,12 @@
 
 `Network.java` implements a supervised back propogration deep neural network.
 Full example usage can be found in `MNIST.java` and `Sandbox.java`. The Apache
-Math Commons 3.6.1 jar is required and can be found 
-[http://commons.apache.org/proper/commons-math/index.html| here].
+Math Commons 3.6.1 jar is required and can be found here: 
+http://commons.apache.org/proper/commons-math/index.html
 
 ## Features
 - Data is encapsulated in the Data class, from `Data.java`.  Compatible MNIST
-  CSV data can be found
-  [https://public.anardil.net/Projects/Neural-Network/data|here].
+  CSV data can be found here: https://public.anardil.net/Projects/Neural-Network/data 
 
 - Network descriptions are single dimensional arrays, where the value at each
   index denotes the number of nodes in that layer. For MNIST, the description
@@ -20,15 +19,15 @@ Math Commons 3.6.1 jar is required and can be found
 
 - With a network description, training is easy
 ```
+  int description[] = { 28 * 28, 15, 10 };
   NeuralNetwork network = new NeuralNetwork(description);
 
-  //network.print_verbose();
   network.train(training_data, 15, 250, learn_speed);
-
-  //network.print_verbose();
+  network.print_verbose();
+  
   System.out.print("Last iteration: ");
   network.get_accuracy(test_data);
 ```
 
-![Alt text](data/sandbox_example.png)
+![Alt text](sandbox_example.png)
 
