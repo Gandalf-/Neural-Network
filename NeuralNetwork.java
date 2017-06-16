@@ -1,4 +1,6 @@
 import org.apache.commons.math3.linear.*;
+import java.io.BufferedReader;
+import java.io.FileReader;
 import java.io.PrintWriter;
 import java.io.IOException;
 
@@ -64,15 +66,82 @@ public class NeuralNetwork {
    */
   public NeuralNetwork(int[] net_descr) {
 
-    NeuralNetwork.num_layers = net_descr.length -1;
-    NeuralNetwork.layers = new Layer[NeuralNetwork.num_layers];
+    NeuralNetwork.num_layers = net_descr.length - 1;
+    NeuralNetwork.layers     = new Layer[NeuralNetwork.num_layers];
 
     for (int i = 1; i < net_descr.length; i++)
       NeuralNetwork.layers[i -1] = new Layer(net_descr[i -1], net_descr[i]);
   }
 
-  public NeuralNetwork(String input_file) {
+  /**
+   *
+   * @param filename name of input CSV network description file
+   */
+  public NeuralNetwork(String filename) {
 
+    int[] net_descr;
+    BufferedReader reader = null;
+
+    /* get feature data from file */
+    try{
+      reader = new BufferedReader(new FileReader(filename));
+
+      // get the network net_description
+      String line = reader.readLine();
+      String[] elements = line.split(",");
+      net_descr = new int[elements.length];
+
+      for (int i = 0; i < elements.length; i++)
+        net_descr[i] = Integer.parseInt(elements[i].trim());
+
+      // construct network
+      NeuralNetwork.num_layers = net_descr.length - 1;
+      NeuralNetwork.layers     = new Layer[NeuralNetwork.num_layers];
+
+      for (int i = 1; i < net_descr.length; i++)
+        NeuralNetwork.layers[i -1] = new Layer(net_descr[i -1], net_descr[i]);
+
+      // set network values with values from file
+      while ((line = reader.readLine()) != null) {
+        elements = line.split(",");
+
+        int layer_ix  = Integer.parseInt(elements[0].trim());
+        int neuron_ix = Integer.parseInt(elements[1].trim());
+
+        Layer layer    = NeuralNetwork.layers[layer_ix];
+        int num_inputs = layer.num_inputs;
+
+        double[] weights = new double[num_inputs];
+        int i;
+        for (i = 0; i < num_inputs; i++) {
+          weights[i] = Double.parseDouble(elements[i + 2].trim());
+        }
+
+        double output = Double.parseDouble(elements[i + 2].trim());
+        double bias   = Double.parseDouble(elements[i + 3].trim());
+        double delta  = Double.parseDouble(elements[i + 4].trim());
+
+        layer.weights.setRow(neuron_ix, weights);
+        layer.outputs.setEntry(neuron_ix, output);
+        layer.biases.setEntry(neuron_ix, bias);
+        layer.deltas.setEntry(neuron_ix, delta);
+      }
+
+      reader.close();
+    }
+
+    catch (ArrayIndexOutOfBoundsException | IOException e){
+      System.out.println(
+          "error: file \"" + filename + "\" is incorrectly formatted.");
+      System.exit(1);
+    }
+
+    finally{
+      if (reader == null){
+        System.out.println("error: could not open " + filename);
+        System.exit(1);
+      }
+    }
   }
 
   /**
@@ -317,7 +386,7 @@ public class NeuralNetwork {
       PrintWriter writer = new PrintWriter(output_file, "UTF-8");
 
       for (int i = 0; i < NeuralNetwork.layers.length; i++) {
-        writer.printf("%d, ", NeuralNetwork.layers[i].num_inputs);
+        writer.printf("%d,", NeuralNetwork.layers[i].num_inputs);
 
         if (i + 1 == NeuralNetwork.layers.length)
           writer.printf("%d\n", NeuralNetwork.layers[i].num_neurons);
@@ -329,19 +398,15 @@ public class NeuralNetwork {
         for (int j = 0; j < layer.num_neurons; j++){
           double [] weights = layer.weights.getRow(j);
 
-          writer.printf(
-              "%d, %d, %d, ",
-              i,
-              layer.num_inputs,
-              layer.num_neurons);
+          writer.printf("%d,%d,", i, j);
 
           for (int k = 0; k < weights.length; k++)
             writer.printf(
-                "%f, ",
+                "%f,",
                 weights[k]);
 
           writer.printf(
-              "%f, %f, %f\n",
+              "%f,%f,%f\n",
               layer.outputs.getEntry(j),
               layer.biases.getEntry(j),
               layer.deltas.getEntry(j));

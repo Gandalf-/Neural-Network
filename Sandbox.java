@@ -42,7 +42,8 @@ public class Sandbox {
 
     /* build the network */
     int[] description = {3, 3, 2, 2};
-    NeuralNetwork network = new NeuralNetwork(description);
+    //NeuralNetwork network = new NeuralNetwork(description);
+    NeuralNetwork network = new NeuralNetwork("data/sandbox.csv");
 
     /* train */
     int tolerance  = 15;
