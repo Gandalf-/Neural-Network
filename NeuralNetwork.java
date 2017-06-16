@@ -1,4 +1,6 @@
 import org.apache.commons.math3.linear.*;
+import java.io.PrintWriter;
+import java.io.IOException;
 
 /**
  * encapsulates a neural network, which is composed of a number of layers;
@@ -67,6 +69,10 @@ public class NeuralNetwork {
 
     for (int i = 1; i < net_descr.length; i++)
       NeuralNetwork.layers[i -1] = new Layer(net_descr[i -1], net_descr[i]);
+  }
+
+  public NeuralNetwork(String input_file) {
+
   }
 
   /**
@@ -296,6 +302,58 @@ public class NeuralNetwork {
       }
     }
     System.out.println("");
+  }
+
+  /**
+   * prints network information in CSV format
+   *
+   * layer 0 inputs, layer 1 inputs, -, layer n inputs, layer n outputs
+   * layer, num_inputs, num_neurons, weights, outputs, biases, deltas
+   * ...
+   */
+  public void print_csv(String output_file) {
+
+    try {
+      PrintWriter writer = new PrintWriter(output_file, "UTF-8");
+
+      for (int i = 0; i < NeuralNetwork.layers.length; i++) {
+        writer.printf("%d, ", NeuralNetwork.layers[i].num_inputs);
+
+        if (i + 1 == NeuralNetwork.layers.length)
+          writer.printf("%d\n", NeuralNetwork.layers[i].num_neurons);
+      }
+
+      for (int i = 0; i < NeuralNetwork.layers.length; i++) {
+        Layer layer = NeuralNetwork.layers[i];
+
+        for (int j = 0; j < layer.num_neurons; j++){
+          double [] weights = layer.weights.getRow(j);
+
+          writer.printf(
+              "%d, %d, %d, ",
+              i,
+              layer.num_inputs,
+              layer.num_neurons);
+
+          for (int k = 0; k < weights.length; k++)
+            writer.printf(
+                "%f, ",
+                weights[k]);
+
+          writer.printf(
+              "%f, %f, %f\n",
+              layer.outputs.getEntry(j),
+              layer.biases.getEntry(j),
+              layer.deltas.getEntry(j));
+        }
+      }
+
+      writer.close();
+    }
+    catch (IOException e) {
+      System.out.println("Error writing network");
+      e.printStackTrace();
+    }
   }
 
   /**

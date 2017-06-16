@@ -1,13 +1,14 @@
+import java.util.InputMismatchException;
 import java.util.Scanner;
 import org.apache.commons.math3.linear.*;
 
 public class Sandbox {
 
-  public static void main(String[] args) {
-
-    Data training_data, test_data;
-    int[] description = {3, 3, 2, 2};
-    int   tr_samples  = 10000, te_samples = 1000;
+  /**
+   * generates a Data object for testing
+   */
+  private static Data make_train_data() {
+    int tr_samples = 10000, te_samples = 1000;
 
     double[][] tr_data_feat  = new double[tr_samples][3];
     double[]   tr_data_label = new double[tr_samples];
@@ -28,9 +29,19 @@ public class Sandbox {
         tr_data_label[i] = 1.0;
     }
 
-    training_data = new Data(tr_data_feat, tr_data_label, 2);
+    return new Data(tr_data_feat, tr_data_label, 2);
+  }
+
+  /**
+   * run some tests
+   */
+  public static void main(String[] args) {
+
+    /* get data */
+    Data training_data = make_train_data();
 
     /* build the network */
+    int[] description = {3, 3, 2, 2};
     NeuralNetwork network = new NeuralNetwork(description);
 
     /* train */
@@ -42,6 +53,7 @@ public class Sandbox {
     /* final output */
     System.out.print("Last iteration: ");
     network.get_accuracy(training_data);
+    network.print_csv("data/sandbox.csv");
 
     /* interactive interface with resulting model */
     System.out.println("Starting interactive mode");
@@ -49,15 +61,22 @@ public class Sandbox {
     int prediction;
 
     while (true) {
-      double   x     = s.nextDouble();
-      double[] feats = {x, x*x, x*x*x};
-      prediction     = network.predict(new ArrayRealVector(feats));
+      try {
+        double   x     = s.nextDouble();
+        double[] feats = {x, x*x, x*x*x};
+        prediction     = network.predict(new ArrayRealVector(feats));
 
-      if (prediction == 1)
-        System.out.println("postive!");
+        if (prediction == 1)
+          System.out.println("postive!");
 
-      else if (prediction == 0)
-        System.out.println("negative!");
+        else if (prediction == 0)
+          System.out.println("negative!");
+
+      }
+      catch (InputMismatchException e) {
+        System.out.println("error: input must be number");
+        s.next();
+      }
 
       System.out.println("");
     }

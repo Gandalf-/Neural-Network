@@ -37,7 +37,7 @@ public class Data {
   public Data(String filename, int size, int outputs) throws IOException {
 
     double max_pixel_value = 255;
-    int image_dimension = 28 * 28;
+    int    image_dimension = 28 * 28;
     double[]   labels   = new double[size];
     double[][] features = new double[size][image_dimension];
 
