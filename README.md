@@ -9,9 +9,7 @@ Math Commons 3.6.1 jar is required and can be found
 ## Quick Start for Linux
   1. `git clone https://github.com/Gandalf-/Neural-Network.git`
   2. `cd Neural-Network`
-  3. Grab the Apache Math Commons 3.6.1 Library
-     [jar](https://public.anardil.net/Projects/Neural-Network/commons-math3-3.6.1.jar) and
-     unzip it. Move commons-math3.6.1.jar into Neural-Network
+  3. `wget https://public.anardil.net/Projects/Neural-Network/commons-math3-3.6.1.jar`
   4. `make`
   5. `java -cp .:commons-math3.6.1.jar Sandbox`
   6. Done!
