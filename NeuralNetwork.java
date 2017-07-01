@@ -81,22 +81,21 @@ public class NeuralNetwork {
    */
   public NeuralNetwork(String filename) {
 
-    int[] net_descr;
     BufferedReader reader = null;
 
-    /* get feature data from file */
+    // get feature data from file
     try{
       reader = new BufferedReader(new FileReader(filename));
 
       // get the network net_description
-      String line = reader.readLine();
-      String[] elements = line.split(",");
-      net_descr = new int[elements.length];
+      String   line      = reader.readLine();
+      String[] elements  = line.split(",");
+      int[]    net_descr = new int[elements.length];
 
       for (int i = 0; i < elements.length; i++)
         net_descr[i] = Integer.parseInt(elements[i].trim());
 
-      // construct network
+      // construct skeleton network
       NeuralNetwork.num_layers = net_descr.length - 1;
       NeuralNetwork.layers     = new Layer[NeuralNetwork.num_layers];
 
@@ -107,26 +106,30 @@ public class NeuralNetwork {
       while ((line = reader.readLine()) != null) {
         elements = line.split(",");
 
-        int layer_ix  = Integer.parseInt(elements[0].trim());
-        int neuron_ix = Integer.parseInt(elements[1].trim());
+        Layer    layer;                 // pointer to current layer
+        double[] weights;               // weights for this neuron
+        double   output, bias, delta;
+        int      i, layer_ix, neuron_ix, num_inputs;
 
-        Layer layer    = NeuralNetwork.layers[layer_ix];
-        int num_inputs = layer.num_inputs;
+        layer_ix  = Integer.parseInt(elements[0].trim());
+        neuron_ix = Integer.parseInt(elements[1].trim());
 
-        double[] weights = new double[num_inputs];
-        int i;
+        layer      = NeuralNetwork.layers[layer_ix];
+        num_inputs = layer.num_inputs;
+
+        weights = new double[num_inputs];
         for (i = 0; i < num_inputs; i++) {
           weights[i] = Double.parseDouble(elements[i + 2].trim());
         }
 
-        double output = Double.parseDouble(elements[i + 2].trim());
-        double bias   = Double.parseDouble(elements[i + 3].trim());
-        double delta  = Double.parseDouble(elements[i + 4].trim());
+        output = Double.parseDouble(elements[i + 2].trim());
+        bias   = Double.parseDouble(elements[i + 3].trim());
+        delta  = Double.parseDouble(elements[i + 4].trim());
 
-        layer.weights.setRow(neuron_ix, weights);
+        layer.weights.setRow(  neuron_ix, weights);
         layer.outputs.setEntry(neuron_ix, output);
-        layer.biases.setEntry(neuron_ix, bias);
-        layer.deltas.setEntry(neuron_ix, delta);
+        layer.biases.setEntry( neuron_ix, bias);
+        layer.deltas.setEntry( neuron_ix, delta);
       }
 
       reader.close();
@@ -379,14 +382,18 @@ public class NeuralNetwork {
    * prints network information in CSV format
    *
    * layer 0 inputs, layer 1 inputs, -, layer n inputs, layer n outputs
-   * layer, num_inputs, num_neurons, weights, outputs, biases, deltas
+   * layer_index, neuron_index, [weights, ...], output, bias, delta
    * ...
+   *
+   * @param output_file name of the output CSV file
    */
   public void print_csv(String output_file) {
 
     try {
       PrintWriter writer = new PrintWriter(output_file, "UTF-8");
 
+      // write the network description
+      // inputs, inputs, ..., outputs
       for (int i = 0; i < NeuralNetwork.layers.length; i++) {
         writer.printf("%d,", NeuralNetwork.layers[i].num_inputs);
 
@@ -394,19 +401,24 @@ public class NeuralNetwork {
           writer.printf("%d\n", NeuralNetwork.layers[i].num_neurons);
       }
 
+      // for each layer
       for (int i = 0; i < NeuralNetwork.layers.length; i++) {
         Layer layer = NeuralNetwork.layers[i];
 
+        // for each neuron
         for (int j = 0; j < layer.num_neurons; j++){
           double [] weights = layer.weights.getRow(j);
 
+          // write layer_index, neuron_index
           writer.printf("%d,%d,", i, j);
 
+          // write weights
           for (int k = 0; k < weights.length; k++)
             writer.printf(
                 "%f,",
                 weights[k]);
 
+          // write neuron output, bias, and delta
           writer.printf(
               "%f,%f,%f\n",
               layer.outputs.getEntry(j),

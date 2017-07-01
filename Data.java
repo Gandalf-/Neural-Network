@@ -44,11 +44,11 @@ public class Data {
     BufferedReader reader = null;
     int image_count, pixel_count;
 
-    /* get feature data from file */
+    // get feature data from file
     try{
       reader = new BufferedReader(new FileReader(filename));
 
-      /* attempt to read the required number of lines */
+      // attempt to read the required number of lines
       for (image_count = 0; image_count < size; image_count++) {
         String line = reader.readLine();
 
@@ -58,7 +58,7 @@ public class Data {
           System.exit(1);
         }
 
-        /* get data, split into labels and pixels */
+        // get data, split into labels and pixels
         String[] pixels = line.split(",");
         labels[image_count] = Double.parseDouble(pixels[0]);
 
@@ -67,13 +67,14 @@ public class Data {
             Double.parseDouble(pixels[pixel_count]) / max_pixel_value;
       }
     }
+
     catch (ArrayIndexOutOfBoundsException e){
       System.out.println(
           "error: file \"" + filename +
           "\" does not have specified dimensionality");
       System.exit(1);
     }
-    /* clean up */
+
     finally{
       if (reader == null){
         System.out.println("error: could not open " + filename);
@@ -83,8 +84,8 @@ public class Data {
     }
 
     Data.features = new Array2DRowRealMatrix(features);
-    Data.labels = labels;
-    Data.size = size;
-    Data.outputs = outputs;
+    Data.labels   = labels;
+    Data.size     = size;
+    Data.outputs  = outputs;
   }
 }
