@@ -1,4 +1,4 @@
-import java.util.InputMismatchException;
+import java.util.NoSuchElementException;
 import java.util.Scanner;
 import org.apache.commons.math3.linear.*;
 
@@ -59,13 +59,12 @@ public class Sandbox {
     /* interactive interface with resulting model */
     System.out.println("Starting interactive mode");
     Scanner s = new Scanner(System.in);
-    int prediction;
 
     while (true) {
       try {
         double   x     = s.nextDouble();
         double[] feats = {x, x*x, x*x*x};
-        prediction     = network.predict(new ArrayRealVector(feats));
+        int prediction = network.predict(new ArrayRealVector(feats));
 
         if (prediction == 1)
           System.out.println("postive!");
@@ -74,7 +73,7 @@ public class Sandbox {
           System.out.println("negative!");
 
       }
-      catch (InputMismatchException e) {
+      catch (NoSuchElementException e) {
         System.out.println("error: input must be number");
         s.next();
       }

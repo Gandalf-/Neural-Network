@@ -17,7 +17,7 @@ public class NeuralNetwork {
    */
   private static class Layer {
 
-    public int num_inputs, num_neurons;
+    public int        num_inputs, num_neurons;
     public RealMatrix weights;
     public RealVector outputs, biases, deltas;
 
@@ -32,12 +32,13 @@ public class NeuralNetwork {
      */
     public Layer(int num_inputs, int num_nodes) {
 
-      double[] biases_base = new double[num_nodes];
+      double[]   biases_base  = new double[num_nodes];
       double[][] weights_base = new double[num_nodes][num_inputs];
 
       for (int j = 0; j < num_nodes; j++) {
-        for (int i = 0; i < num_inputs; i++)
+        for (int i = 0; i < num_inputs; i++) {
           weights_base[j][i] = Math.random() * 0.01;
+        }
         biases_base[j] = Math.random() * 0.01;
       }
 
@@ -51,8 +52,8 @@ public class NeuralNetwork {
     }
   }
 
+  private static int     num_layers;
   private static Layer[] layers;
-  private static int num_layers;
 
   /**
    * initializes a neural network by constructing each layer given a network
@@ -69,8 +70,9 @@ public class NeuralNetwork {
     NeuralNetwork.num_layers = net_descr.length - 1;
     NeuralNetwork.layers     = new Layer[NeuralNetwork.num_layers];
 
-    for (int i = 1; i < net_descr.length; i++)
+    for (int i = 1; i < net_descr.length; i++) {
       NeuralNetwork.layers[i -1] = new Layer(net_descr[i -1], net_descr[i]);
+    }
   }
 
   /**
@@ -92,15 +94,17 @@ public class NeuralNetwork {
       String[] elements  = line.split(",");
       int[]    net_descr = new int[elements.length];
 
-      for (int i = 0; i < elements.length; i++)
+      for (int i = 0; i < elements.length; i++) {
         net_descr[i] = Integer.parseInt(elements[i].trim());
+      }
 
       // construct skeleton network
       NeuralNetwork.num_layers = net_descr.length - 1;
       NeuralNetwork.layers     = new Layer[NeuralNetwork.num_layers];
 
-      for (int i = 1; i < net_descr.length; i++)
+      for (int i = 1; i < net_descr.length; i++) {
         NeuralNetwork.layers[i -1] = new Layer(net_descr[i -1], net_descr[i]);
+      }
 
       // set network values with values from file
       while ((line = reader.readLine()) != null) {
@@ -159,9 +163,10 @@ public class NeuralNetwork {
    */
   public RealVector forward_propagate(RealVector input) {
 
-    for (Layer layer : NeuralNetwork.layers)
+    for (Layer layer : NeuralNetwork.layers) {
       input = layer.outputs = sigmoid(
           layer.weights.operate(input).add(layer.biases));
+    }
 
     return input;
   }
@@ -180,7 +185,7 @@ public class NeuralNetwork {
   private void back_propagate_error(RealVector expected) {
 
     RealVector derivatives, errors;
-    int i, output_layer = NeuralNetwork.num_layers -1;
+    int        i, output_layer = NeuralNetwork.num_layers -1;
 
     /* for each layer in reverse */
     for (i = NeuralNetwork.num_layers -1; i >= 0; i--) {
@@ -220,25 +225,20 @@ public class NeuralNetwork {
    */
   private void update_weights(RealVector features, double learn_speed) {
 
-    RealVector inputs;
+    RealVector inputs, adjusted_deltas;
+    RealMatrix weight_changes;
     int i, output_layer = 0;
 
     for (i = 0; i < NeuralNetwork.num_layers; i++) {
       Layer layer = NeuralNetwork.layers[i];
 
-      if (i == output_layer)
-        inputs = features;
-      else
-        inputs = NeuralNetwork.layers[i - 1].outputs;
+      inputs = (i == output_layer) ?
+          features : NeuralNetwork.layers[i - 1].outputs;
 
-      layer.biases = layer.biases.add(
-          layer.deltas.mapMultiply(learn_speed));
+      layer.biases = layer.biases.add(layer.deltas.mapMultiply(learn_speed));
 
-      RealVector adjusted_deltas =
-        layer.deltas.mapMultiply(learn_speed);
-
-      RealMatrix weight_changes =
-        inputs.outerProduct(adjusted_deltas).transpose();
+      adjusted_deltas = layer.deltas.mapMultiply(learn_speed);
+      weight_changes  = inputs.outerProduct(adjusted_deltas).transpose();
 
       layer.weights = layer.weights.add(weight_changes);
     }
@@ -268,8 +268,9 @@ public class NeuralNetwork {
 
     /* precompute one hot encoding */
     double[][] one_hot_base = new double[Data.size][Data.outputs];
-    for (i = 0; i < Data.size; i++)
+    for (i = 0; i < Data.size; i++) {
       one_hot_base[i][(int)Data.labels[i]] = 1.0;
+    }
     RealMatrix one_hot = new Array2DRowRealMatrix(one_hot_base);
 
     /* train the network */
@@ -284,8 +285,9 @@ public class NeuralNetwork {
         errors   = expected.subtract(outputs);
         errors   = errors.ebeMultiply(errors);
 
-        for (j = 0; j < dimension; j++)
+        for (j = 0; j < dimension; j++) {
           sum_error += errors.getEntry(j);
+        }
 
         back_propagate_error(expected);
         update_weights(Data.features.getRowVector(i), learn_speed);
@@ -301,8 +303,10 @@ public class NeuralNetwork {
         if (sum_error < saved_best - 1) {
           accuracy = get_accuracy(data);
           saved_best = sum_error;
-          if (accuracy > best_accuracy)
+
+          if (accuracy > best_accuracy) {
             best_accuracy = accuracy;
+          }
         }
         else {
           System.out.println("");
@@ -332,8 +336,9 @@ public class NeuralNetwork {
     double correct = 0.0;
 
     for (int i = 0; i < Data.size; i++) {
-      if (predict(Data.features.getRowVector(i)) == Data.labels[i])
+      if (predict(Data.features.getRowVector(i)) == Data.labels[i]) {
         correct++;
+      }
     }
 
     System.out.printf("%.4f%% correct\n", correct / Data.size);
@@ -366,8 +371,9 @@ public class NeuralNetwork {
         double[] weights = layer.weights.getRowVector(j).toArray();
 
         System.out.print("    Weights: ");
-        for (int k = 0; k < weights.length; k++)
+        for (int k = 0; k < weights.length; k++) {
           System.out.printf("%.4f, ", weights[k]);
+        }
         System.out.println("");
 
         System.out.printf(
@@ -397,8 +403,9 @@ public class NeuralNetwork {
       for (int i = 0; i < NeuralNetwork.layers.length; i++) {
         writer.printf("%d,", NeuralNetwork.layers[i].num_inputs);
 
-        if (i + 1 == NeuralNetwork.layers.length)
+        if (i + 1 == NeuralNetwork.layers.length) {
           writer.printf("%d\n", NeuralNetwork.layers[i].num_neurons);
+        }
       }
 
       // for each layer
@@ -413,10 +420,9 @@ public class NeuralNetwork {
           writer.printf("%d,%d,", i, j);
 
           // write weights
-          for (int k = 0; k < weights.length; k++)
-            writer.printf(
-                "%f,",
-                weights[k]);
+          for (int k = 0; k < weights.length; k++) {
+            writer.printf("%f,", weights[k]);
+          }
 
           // write neuron output, bias, and delta
           writer.printf(
@@ -467,8 +473,9 @@ public class NeuralNetwork {
    */
   private static RealVector sigmoid(RealVector v){
 
-    for (int i = 0, length = v.getDimension(); i < length; i++)
+    for (int i = 0, length = v.getDimension(); i < length; i++) {
       v.setEntry(i, 1.0 / (1.0 + Math.exp(- v.getEntry(i))) );
+    }
     return v;
   }
 }
