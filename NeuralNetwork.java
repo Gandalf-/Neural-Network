@@ -193,21 +193,16 @@ public class NeuralNetwork {
 
       if (i == output_layer) {
         errors = expected.subtract(layer.outputs);
-
-        derivatives = layer.outputs.ebeMultiply(
-            layer.outputs.mapSubtract(1.0));
-
-        layer.deltas = errors.ebeMultiply(derivatives).mapMultiply(-1.0);
       }
       else {
         errors = NeuralNetwork.layers[i + 1].weights.transpose().operate(
             NeuralNetwork.layers[i + 1].deltas);
-
-        derivatives = layer.outputs.ebeMultiply(
-            layer.outputs.mapSubtract(1.0));
-
-        layer.deltas = errors.ebeMultiply(derivatives).mapMultiply(-1.0);
       }
+
+      derivatives = layer.outputs.ebeMultiply(
+          layer.outputs.mapSubtract(1.0));
+
+      layer.deltas = errors.ebeMultiply(derivatives).mapMultiply(-1.0);
     }
   }
 
@@ -304,9 +299,8 @@ public class NeuralNetwork {
           accuracy = get_accuracy(data);
           saved_best = sum_error;
 
-          if (accuracy > best_accuracy) {
-            best_accuracy = accuracy;
-          }
+          best_accuracy =
+            (accuracy > best_accuracy) ?  accuracy : best_accuracy;
         }
         else {
           System.out.println("");
