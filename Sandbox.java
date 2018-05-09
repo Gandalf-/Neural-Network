@@ -5,40 +5,42 @@ import org.apache.commons.math3.linear.*;
 public class Sandbox {
 
   /**
-   * generates a Data object for testing
+   * generates a Data object for testing.
    */
-  private static Data make_train_data() {
-    int tr_samples = 10000, te_samples = 1000;
+  private static Data make_trainData() {
+    int trSamples = 10000;
+    int teSamples = 1000;
 
-    double[][] tr_data_feat  = new double[tr_samples][3];
-    double[]   tr_data_label = new double[tr_samples];
+    double[][] trDataFeat  = new double[trSamples][3];
+    double[]   trDataLabel = new double[trSamples];
 
-    double[][] te_data_feat  = new double[te_samples][3];
-    double[]   te_data_label = new double[te_samples];
+    double[][] teDataFeat  = new double[teSamples][3];
+    double[]   teDataLabel = new double[teSamples];
 
     /* make the training data */
-    for (int i = 0; i < tr_samples; i++) {
-      double x = Math.random() - 0.5;
-      tr_data_feat[i][0] = x;
-      tr_data_feat[i][1] = x * x;
-      tr_data_feat[i][2] = x * x * x;
+    for (int i = 0; i < trSamples; i++) {
+      double val = Math.random() - 0.5;
+      trDataFeat[i][0] = val;
+      trDataFeat[i][1] = val * val;
+      trDataFeat[i][2] = val * val * val;
 
-      if (x < 0)
-        tr_data_label[i] = 0.0;
-      else
-        tr_data_label[i] = 1.0;
+      if (val < 0) {
+        trDataLabel[i] = 0.0;
+      } else {
+        trDataLabel[i] = 1.0;
+      }
     }
 
-    return new Data(tr_data_feat, tr_data_label, 2);
+    return new Data(trDataFeat, trDataLabel, 2);
   }
 
   /**
-   * run some tests
+   * run some tests.
    */
   public static void main(String[] args) {
 
     /* get data */
-    Data training_data = make_train_data();
+    Data trainingData = make_trainData();
 
     /* build the network */
     int[] description = {3, 3, 2, 2};
@@ -47,35 +49,35 @@ public class Sandbox {
 
     /* train */
     int tolerance  = 15;
-    int max_epochs = 200;
+    int maxEpochs = 200;
     double speed   = 0.01;
-    network.train(training_data, tolerance, max_epochs, speed);
+    network.train(trainingData, tolerance, maxEpochs, speed);
 
     /* final output */
     System.out.print("Last iteration: ");
-    network.get_accuracy(training_data);
+    network.get_accuracy(trainingData);
     network.print_csv("models/sandbox.csv");
 
     /* interactive interface with resulting model */
     System.out.println("Starting interactive mode");
-    Scanner s = new Scanner(System.in);
+    Scanner scanner = new Scanner(System.in);
 
     while (true) {
       try {
-        double   x     = s.nextDouble();
-        double[] feats = {x, x*x, x*x*x};
+        double   val   = scanner.nextDouble();
+        double[] feats = {val, val * val, val * val * val};
         int prediction = network.predict(new ArrayRealVector(feats));
 
-        if (prediction == 1)
+        if (prediction == 1) {
           System.out.println("postive!");
 
-        else if (prediction == 0)
+        } else if (prediction == 0) {
           System.out.println("negative!");
+        }
 
-      }
-      catch (NoSuchElementException e) {
+      } catch (NoSuchElementException except) {
         System.out.println("error: input must be number");
-        s.next();
+        scanner.next();
       }
 
       System.out.println("");

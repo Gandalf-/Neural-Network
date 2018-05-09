@@ -5,7 +5,7 @@ import org.apache.commons.math3.linear.*;
 
 /**
  * encapsulates information coming out of csv's; data is also standaridzed
- * during input collection
+ * during input collection.
  */
 public class Data {
 
@@ -15,7 +15,7 @@ public class Data {
   public static int outputs;
 
   /**
-   * bundles inputs into a class for easy access by NeuralNetwork methods
+   * bundles inputs into a class for easy access by NeuralNetwork methods.
    *
    * @param  features   matrix of input features
    * @param  labels     array of correct labels
@@ -29,54 +29,53 @@ public class Data {
   }
 
   /**
-   * bundles inputs into a class for easy access by NeuralNetwork methods
+   * bundles inputs into a class for easy access by NeuralNetwork methods.
    *
-   * @param  labels   array of correct labels
-   * @param  size     number of inputs
+   * @param  filename   path to csv
+   * @param  size       number of inputs
+   * @param  outputs    number of outputs
    */
   public Data(String filename, int size, int outputs) throws IOException {
 
-    double max_pixel_value = 255;
-    int    image_dimension = 28 * 28;
+    int    imageDimension = 28 * 28;
     double[]   labels   = new double[size];
-    double[][] features = new double[size][image_dimension];
+    double[][] features = new double[size][imageDimension];
 
     BufferedReader reader = null;
-    int image_count, pixel_count;
 
     // get feature data from file
-    try{
+    try {
       reader = new BufferedReader(new FileReader(filename));
 
       // attempt to read the required number of lines
-      for (image_count = 0; image_count < size; image_count++) {
+      for (int imageCount = 0; imageCount < size; imageCount++) {
         String line = reader.readLine();
 
-        if (line == null){
-          System.out.println("error: file \"" + filename +
-              "\" does not have specified number of data points");
+        if (line == null) {
+          System.out.println("error: file \"" + filename
+              + "\" does not have specified number of data points");
           System.exit(1);
         }
 
         // get data, split into labels and pixels
         String[] pixels = line.split(",");
-        labels[image_count] = Double.parseDouble(pixels[0]);
+        labels[imageCount] = Double.parseDouble(pixels[0]);
 
-        for (pixel_count = 1; pixel_count < image_dimension; pixel_count++)
-          features[image_count][pixel_count] =
-            Double.parseDouble(pixels[pixel_count]) / max_pixel_value;
+        double maxPixelValue = 255;
+        for (int pixelCount = 1; pixelCount < imageDimension; pixelCount++) {
+          features[imageCount][pixelCount] =
+            Double.parseDouble(pixels[pixelCount]) / maxPixelValue;
+        }
       }
-    }
 
-    catch (ArrayIndexOutOfBoundsException e){
+    } catch (ArrayIndexOutOfBoundsException except) {
       System.out.println(
-          "error: file \"" + filename +
-          "\" does not have specified dimensionality");
+          "error: file \"" + filename
+          + "\" does not have specified dimensionality");
       System.exit(1);
-    }
 
-    finally{
-      if (reader == null){
+    } finally {
+      if (reader == null) {
         System.out.println("error: could not open " + filename);
         System.exit(1);
       }
