@@ -5,7 +5,7 @@ public class MNIST {
 
   private static int g_train_size    = 60000;
   private static int g_test_size     = 10000;
-  private static int image_dimension = 28 * 28;
+  private static final int image_dimension = 28 * 28;
 
   private static String g_train_fn = "";
   private static String g_test_fn  = "";
@@ -34,18 +34,18 @@ public class MNIST {
 
     /* get data */
     System.out.print("Data loading...");
-    Data trainingData = new Data(g_train_fn, g_train_size, 10);
+    final Data trainingData = new Data(g_train_fn, g_train_size, 10);
     System.out.println(" Done");
 
     /* build network */
     System.out.println("Learning speed: " + learnSpeed);
-    NeuralNetwork network = new NeuralNetwork(description);
+    final NeuralNetwork network = new NeuralNetwork(description);
 
     network.train(trainingData, 15, 250, learnSpeed);
     network.print_csv("models/mnist.csv");
 
     System.out.print("Last iteration: ");
-    Data testData     = new Data(g_test_fn,  g_test_size, 10);
+    final Data testData     = new Data(g_test_fn,  g_test_size, 10);
     network.get_accuracy(testData);
   }
 }

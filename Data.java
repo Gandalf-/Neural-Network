@@ -20,7 +20,7 @@ public class Data {
    * @param  features   matrix of input features
    * @param  labels     array of correct labels
    */
-  public Data(double[][] features, double[] labels, int outputs) {
+  public Data(final double[][] features, final double[] labels, final int outputs) {
 
     Data.features = new Array2DRowRealMatrix(features);
     Data.labels   = labels;
@@ -31,15 +31,15 @@ public class Data {
   /**
    * bundles inputs into a class for easy access by NeuralNetwork methods.
    *
-   * @param  filename   path to csv
+   * @param  filename   path to csv file
    * @param  size       number of inputs
    * @param  outputs    number of outputs
    */
-  public Data(String filename, int size, int outputs) throws IOException {
+  public Data(final String filename, final int size, final int outputs) throws IOException {
 
-    int    imageDimension = 28 * 28;
-    double[]   labels   = new double[size];
-    double[][] features = new double[size][imageDimension];
+    final int  imageDimension = 28 * 28;
+    final double[]   labels   = new double[size];
+    final double[][] features = new double[size][imageDimension];
 
     BufferedReader reader = null;
 
@@ -49,7 +49,7 @@ public class Data {
 
       // attempt to read the required number of lines
       for (int imageCount = 0; imageCount < size; imageCount++) {
-        String line = reader.readLine();
+        final String line = reader.readLine();
 
         if (line == null) {
           System.out.println("error: file \"" + filename
@@ -58,10 +58,10 @@ public class Data {
         }
 
         // get data, split into labels and pixels
-        String[] pixels = line.split(",");
+        final String[] pixels = line.split(",");
         labels[imageCount] = Double.parseDouble(pixels[0]);
 
-        double maxPixelValue = 255;
+        final double maxPixelValue = 255;
         for (int pixelCount = 1; pixelCount < imageDimension; pixelCount++) {
           features[imageCount][pixelCount] =
             Double.parseDouble(pixels[pixelCount]) / maxPixelValue;

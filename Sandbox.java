@@ -43,14 +43,14 @@ public class Sandbox {
     Data trainingData = make_trainData();
 
     /* build the network */
-    int[] description = {3, 3, 2, 2};
+    final int[] description = {3, 3, 2, 2};
     //NeuralNetwork network = new NeuralNetwork(description);
-    NeuralNetwork network = new NeuralNetwork("models/sandbox.csv");
+    final NeuralNetwork network = new NeuralNetwork("models/sandbox.csv");
 
     /* train */
-    int tolerance  = 15;
-    int maxEpochs = 200;
-    double speed   = 0.01;
+    final int tolerance  = 15;
+    final int maxEpochs = 200;
+    final double speed   = 0.01;
     network.train(trainingData, tolerance, maxEpochs, speed);
 
     /* final output */
@@ -60,13 +60,13 @@ public class Sandbox {
 
     /* interactive interface with resulting model */
     System.out.println("Starting interactive mode");
-    Scanner scanner = new Scanner(System.in);
+    final Scanner scanner = new Scanner(System.in);
 
     while (true) {
       try {
-        double   val   = scanner.nextDouble();
-        double[] feats = {val, val * val, val * val * val};
-        int prediction = network.predict(new ArrayRealVector(feats));
+        final double   val   = scanner.nextDouble();
+        final double[] feats = {val, val * val, val * val * val};
+        final int prediction = network.predict(new ArrayRealVector(feats));
 
         if (prediction == 1) {
           System.out.println("postive!");
