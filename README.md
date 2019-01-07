@@ -4,19 +4,19 @@
 `Network.java` implements a supervised back propogration deep neural network.
 Full example usage can be found in `MNIST.java` and `Sandbox.java`. The Apache
 Math Commons 3.6.1 jar is required and can be found 
-[here](http://commons.apache.org/proper/commons-math/download_math.cgi) from the Apache Math Commons website or you get just the jar [here](https://public.anardil.net/Projects/Neural-Network/commons-math3-3.6.1.jar) from anardil.net.
+[here](http://commons.apache.org/proper/commons-math/download_math.cgi) from the Apache Math Commons website or you get just the jar [here](https://public.anardil.net/share/code/Neural-Network/commons-math3-3.6.1.jar) from anardil.net.
 
 ## Quick Start for Linux
   1. `git clone https://github.com/Gandalf-/Neural-Network.git`
   2. `cd Neural-Network`
-  3. `wget https://public.anardil.net/Projects/Neural-Network/commons-math3-3.6.1.jar`
+  3. `wget https://public.anardil.net/share/code/Neural-Network/commons-math3-3.6.1.jar`
   4. `make`
   5. `java -cp .:commons-math3.6.1.jar Sandbox`
   6. Done!
 
 ## Features
 - Data is encapsulated in the Data class, from `Data.java`.  Compatible MNIST
-  CSV data can be found [here](https://public.anardil.net/Projects/Neural-Network/data)
+  CSV data can be found [here](https://public.anardil.net/share/code/Neural-Network/models/index.html)
 
 - Network descriptions are single dimensional arrays, where the value at each
   index denotes the number of nodes in that layer. For MNIST, the description
